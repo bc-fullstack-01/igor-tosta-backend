@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>Document</title>
+</head>
+<body>
+    <form action="/user" method="POST">
+        <label for="user[title]">Titulo</label>
+        <input name="user[title]" id="user[title]" type="text" >
+        <label for="user[content]">Conteudo</label>
+        <input type="text" name="user[content]" id="user[content]" >
+        <button type="submit" value="Save">Postar</button>
+    </form>
+    <ul>
+        <% user.forEach(user =>{ %>
+            <li>
+                <form action="/user/<%= user.id %>?_method=delete" method="post">
+                    <a href="/user/<%= user.id %>"><%= user.title %></a>
+                    <h3><%= user.content %></h3>
+                    <button type="submit">deletar</button>
+                </form>
+            </li>
+        <% }) %>
+    </ul>
+</body>
+</html>
