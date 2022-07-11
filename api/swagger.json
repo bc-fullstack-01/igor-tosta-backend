@@ -1,0 +1,215 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "API Social Media",
+        "description": "Documentation API",
+        "version": "1.0.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/posts":{
+            "get":{
+                "description": "Get All Posts",
+                "summary": "Get All Posts",
+                "tags":["Post"],
+                "responses":{
+                "200":{"description": "Ok"}
+               } 
+            },
+            "post":{
+                "description": "Creat a Post",
+                "summary": "Creat a Post",
+                "tags":["Post"],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties":{
+                                    "title":{"type": "string"},
+                                    "content":{"type": "string"}
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201":{"description": "Created a Post"}
+                }
+            }
+        },
+        "/posts/{id}":{
+            "get": {
+                "description": "Seach for a Post",
+                "summary": "Seach for a Post by id",
+                "tags": ["Post"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Post Id",
+                    "required": true
+                }],
+                "responses":{
+                    "200":{
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a Post",
+                "summary": "Delete a Post",
+                "tags": ["Post"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Post Id",
+                    "required": true
+                }],
+                "responses":{
+                    "200":{"description": "Successfully Deleted"}
+                }
+            },
+            "put":{
+                "description": "Update a Post",
+                "summary": "Update a Post",
+                "tags": ["Post"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Post Id",
+                    "required": true
+                }],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties":{
+                                    "title":{"type": "string"},
+                                    "content":{"type": "string"}
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{"description": "Updated a Post"}
+                }
+            }
+        },
+        "/posts/{postId}":{
+            "post":{
+                "description": "Create a Comment",
+                "summary": "Create a Comment",
+                "tags":["Comment"],
+                "parameters": [{
+                    "name": "postId",
+                    "in": "path",
+                    "description": "Post Id",
+                    "required": true
+                }],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties":{
+                                    "content":{"type": "string"}
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201":{"description": "Created a Comment"}
+                }
+            }
+        },
+        "/posts/{postId}/comments/{id}":{
+            "get":{
+                "description": "Seach for a Comment by Id",
+                "summary": "Seach for a Comment by Id",
+                "tags": ["Comment"],
+                "parameters": [{
+                    "name": "postId",
+                    "in": "path",
+                    "description": "Post Id",
+                    "required": true
+                },
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "Comment Id",
+                    "required": true
+                }],
+                "responses":{
+                    "200":{
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            },
+            "put":{
+                "description": "Update a Comment",
+                "summary": "Update a Comment",
+                "tags": ["Comment"],
+                "parameters": [{
+                    "name": "postId",
+                    "in": "path",
+                    "description": "Post Id",
+                    "required": true
+                },
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "Comment Id",
+                    "required": true
+                }],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties":{
+                                    "content":{"type": "string"}
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{"description": "Updated a Comment"}
+                }
+            },
+            "delete": {
+                "description": "Delete a Comment",
+                "summary": "Delete a Comment",
+                "tags": ["Comment"],
+                "parameters": [{
+                    "name": "postId",
+                    "in": "path",
+                    "description": "Post Id",
+                    "required": true
+                },
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "Comment Id",
+                    "required": true
+                }],
+                "responses":{
+                    "200":{"description": "Successfully Deleted"}
+                }
+            }
+        }
+    }
+}
