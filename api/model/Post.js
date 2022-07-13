@@ -12,9 +12,14 @@ const postSchema = new mongoose.Schema(
             type: String, required: [true, "Post content can't be empty"], 
             minLength: [2, `Minimum of 2 characters, " {VALUE} " unmet quantity`]
         },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'user', required: true
+        },
         comments: [
             {
-                type: mongoose.Schema.Types.ObjectId, ref:"comments"
+                type: mongoose.Schema.Types.ObjectId, 
+                ref: "comments"
             }
         ]
     }

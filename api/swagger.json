@@ -210,6 +210,62 @@
                     "200":{"description": "Successfully Deleted"}
                 }
             }
+        },
+        "/user":{
+            "get":{
+                "security": [{"bearerAuth": []}],
+                "description": "Get All Users",
+                "summary": "Get All Users",
+                "tags":["Users"],
+                "responses":{
+                "200":{"description": "Ok"}
+               } 
+            },
+            "post":{
+                "description": "Creat a User",
+                "summary": "Creat a User",
+                "tags":["Users"],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties":{
+                                    "name": {"type": "string"},
+                                    "user":{"type": "string"},
+                                    "password":{"type": "string"}
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201":{"description": "Created a User"}
+                }
+            }
+        },
+        "/user/login":{
+            "post":{
+                "description": "User Login",
+                "summary": "User Login",
+                "tags":["Users"],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties":{
+                                    "user":{"type": "string"},
+                                    "password":{"type": "string"}
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201":{"description": "Login Successfully"}
+                }
+            }
         }
     }
 }

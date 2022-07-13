@@ -4,11 +4,16 @@ const commentSchema = new mongoose.Schema(
     {
         post:
         {
-            type: mongoose.Schema.Types.ObjectId, ref: "posts", required: true
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: "posts", required: true
         },
         content: 
         {
             type: String, required: [true, "No empty comments allowed"]
+        },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'user', required: true
         }
     }
 );

@@ -4,6 +4,7 @@
     "start": "nodemon api/index.js"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "ejs": "^3.1.8",
@@ -12,6 +13,7 @@
     "fs": "^0.0.1-security",
     "helmet": "^5.1.0",
     "http-errors": "^2.0.0",
+    "jsonwebtoken": "^8.5.1",
     "method-override": "^3.0.0",
     "mongoose": "^6.4.3",
     "morgan": "^1.10.0",

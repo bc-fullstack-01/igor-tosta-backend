@@ -2,14 +2,18 @@ const express = require("express");
 const createError = require("http-errors");
 const logger = require("morgan");
 const bodyParser = require("body-parser");
-const cors = require("cors")
+const cors = require("cors");
 const helmet = require("helmet");
-const swagger = require("swagger-ui-express")
+const swagger = require("swagger-ui-express");
+const jwt = require('jsonwebtoken');
 
-const {Connection} = require("./model")
+const ACCES_TOKEN_SECRET = process.env.ACCES_TOKEN_SECRET || "accestoken"
+
+const {Connection, User} = require("./model");
 const postsRouters = require("./routers/postRouters");
-const commentRouters = require("./routers/commentRouters")
-const swaggerDocument = require("./swagger")
+const commentRouters = require("./routers/commentRouters");
+const userRouters = require("./routers/userRouters");
+const swaggerDocument = require("./swagger");
 
 const app = express();
 
@@ -25,8 +29,23 @@ app.use((req, res, next) => Connection
     .catch(err => next(err))
 )
 
-app.use("/posts", postsRouters);
-app.use("/posts", commentRouters)
+const authenticateToken = (req, res, next) =>{
+    const token = req.headers.authorization && req.headers.authorization.split(" ")[1]
+    if (token == null) return next(createError(401))
+    jwt.verify(token, ACCES_TOKEN_SECRET, (err, user) =>{
+        if (err) return next(createError(403))
+        User.findOne({user})
+            .then(u =>{
+                req.user = u
+                next()
+            })
+            .catch(err => next(err))
+    })
+}
+
+app.use("/posts", authenticateToken, postsRouters);
+app.use("/comments", authenticateToken, commentRouters);
+app.use("/user", userRouters);
 
 app.use((req,res,next) =>next(createError(404)));
 
