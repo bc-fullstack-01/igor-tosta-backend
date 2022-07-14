@@ -211,20 +211,21 @@
                 }
             }
         },
-        "/user":{
+        "/me":{
             "get":{
                 "security": [{"bearerAuth": []}],
-                "description": "Get All Users",
-                "summary": "Get All Users",
-                "tags":["Users"],
+                "description": "Recover a User",
+                "summary": "Recover a User",
+                "tags": ["User"],
                 "responses":{
-                "200":{"description": "Ok"}
-               } 
+                    "200":{"description": "Ok"}
+                } 
             },
-            "post":{
-                "description": "Creat a User",
-                "summary": "Creat a User",
-                "tags":["Users"],
+            "put":{
+                "security":[{"bearerAuth": []}],
+                "description": "Update a User",
+                "summary": "Update a User",
+                "tags": ["User"],
                 "requestBody":{
                     "content":{
                         "application/json":{
@@ -240,15 +241,59 @@
                     }
                 },
                 "responses":{
+                    "200":{"description": "Successfully Update"}
+                }
+            },
+            "delete":{
+                "security": [{"bearerAuth": []}],
+                "description": "User Deleted",
+                "summary": "User Deleted",
+                "tags": ["User"],
+                "responses":{
+                    "200":{"description": "Successfully Delete"}
+                }
+            }
+        },
+        "/feed":{
+            "get":{
+                "security": [{"bearerAuth": []}],
+                "description": "Recover All Posts from Followed Profiles",
+                "summary": "Recover All Posts from Followed Profiles",
+                "tags": ["Feed"],
+                "responses":{
+                    "200":{"description": "Ok"}
+                } 
+            }
+        },
+        "/register":{
+            "post":{
+                "description": "Creat a User",
+                "summary": "Creat a User",
+                "tags":["Security"],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties":{
+                                    "name": "string",
+                                    "user":{"type": "string"},
+                                    "password":{"type": "string"}
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
                     "201":{"description": "Created a User"}
                 }
             }
         },
-        "/user/login":{
+        "/login":{
             "post":{
                 "description": "User Login",
                 "summary": "User Login",
-                "tags":["Users"],
+                "tags":["Security"],
                 "requestBody":{
                     "content":{
                         "application/json":{
@@ -263,7 +308,7 @@
                     }
                 },
                 "responses":{
-                    "201":{"description": "Login Successfully"}
+                    "201":{"description": "User Login Successfully"}
                 }
             }
         }

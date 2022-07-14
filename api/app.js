@@ -9,11 +9,16 @@ const jwt = require('jsonwebtoken');
 
 const ACCES_TOKEN_SECRET = process.env.ACCES_TOKEN_SECRET || "accestoken"
 
-const {Connection, User} = require("./model");
-const postsRouters = require("./routers/postRouters");
+const swaggerDocument = require("./swagger");
+
+const {Connection, Profile, User} = require("./model");
+const postRouters = require("./routers/postRouters");
 const commentRouters = require("./routers/commentRouters");
 const userRouters = require("./routers/userRouters");
-const swaggerDocument = require("./swagger");
+const profileRouters = require("./routers/profileRouters");
+const feedRouters = require("./routers/feedRouters");
+const securityRouters = require("./routers/securityRouters");
+
 
 const app = express();
 
@@ -43,9 +48,12 @@ const authenticateToken = (req, res, next) =>{
     })
 }
 
-app.use("/posts", authenticateToken, postsRouters);
-app.use("/comments", authenticateToken, commentRouters);
-app.use("/user", userRouters);
+app.use("/", securityRouters);
+app.use("/", authenticateToken, userRouters);
+app.use("/", authenticateToken, postRouters);
+app.use("/", authenticateToken, commentRouters);
+app.use("/", authenticateToken, profileRouters);
+app.use("/", authenticateToken, feedRouters);
 
 app.use((req,res,next) =>next(createError(404)));
 

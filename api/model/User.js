@@ -18,10 +18,6 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
             minLength: 2
-        },
-        following: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'user'
         }
     }
 );

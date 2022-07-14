@@ -4,7 +4,7 @@ const {Post, Comments} = require("../model")
 const router = express.Router();
 
 router
-    .route("/")
+    .route("/posts")
     .get((req,res, next) => Promise.resolve()
         .then(() => Post.find({}))
         .then((data) => {
@@ -18,7 +18,7 @@ router
         .catch(err =>  next(err)))
     
 router
-    .route("/:id")
+    .route("/posts/:id")
     .get((req, res, next) => Promise.resolve()
         .then(() => Post.findById(req.params.id))
         .then(data => res.status(200).json(data))
@@ -30,7 +30,7 @@ router
             comment.delete()
             }))
         .then(() =>{
-            res.status(200).send({message:"Successfully Deleted"})
+            res.status(200).send({message: "Successfully Deleted"})
         })
         .catch(err =>  next(err)))
     .put((req, res, next) => Promise.resolve()

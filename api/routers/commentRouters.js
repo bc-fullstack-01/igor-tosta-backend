@@ -5,7 +5,7 @@ const {Post, Comments} = require("../model");
 const router = express.Router();
 
 router
-    .route("/:postId/comments/:id")
+    .route("/comments/:postId/comments/:id")
     .get((req, res, next) => Promise.resolve()
         .then(() => Comments.findById(req.params.id))
         .then(data => res.status(200).json(data))
@@ -22,7 +22,7 @@ router
         .catch(err => next(err)));
 
 router
-    .route("/:postId")
+    .route("/comments/:postId")
     .post((req, res, next) => Promise.resolve()
         .then(() => new  Comments(Object.assign(req.body, {post: req.params.postId})).save())
         .then(data => Post.findByIdAndUpdate(data.post,{$push: {comments: data}}))
