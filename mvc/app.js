@@ -7,7 +7,8 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 
 const index = require("./routers/index")
-const user = require("./routers/userRouters");
+const postRouters = require("./routers/postRouters");
+const commentRouters = require("./routers/commentRouters")
 
 const app = express();
 
@@ -41,7 +42,8 @@ app.use((req,res,next) =>{
 });
 
 app.use("/", index);
-app.use("/user", user);
+app.use("/posts", postRouters);
+app.use("/posts", commentRouters);
 
 app.use((req,res,next) =>next(createError(404)));
 

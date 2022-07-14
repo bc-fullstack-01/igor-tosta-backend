@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>Posts</title>
+</head>
+<body>
+    <form action="/posts" method="POST">
+        <label for="post[title]">Titulo</label>
+        <input name="post[title]" id="post[title]" type="text" >
+        <label for="post[content]">Conteudo</label>
+        <input type="text" name="post[content]" id="post[content]" >
+        <button type="submit" value="Save">Postar</button>
+    </form>
+    <%- include('errors.ejs') %>
+    <ul>
+        <% posts.forEach(post =>{ %>
+            <li>
+                <form action="/posts/<%= post.id %>?_method=delete" method="post">
+                    <a href="/posts/<%= post.id %>"><%= post.title %></a>
+                    <h3><%= post.content %></h3>
+                    <button type="submit">Deletar</button>
+                </form>
+            </li>
+        <% }) %>
+    </ul>
+</body>
+</html>

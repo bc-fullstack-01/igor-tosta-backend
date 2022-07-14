@@ -3,6 +3,7 @@ const {User, Profile} = require("../model");
 
 const bcrypt =  require("bcrypt")
 const jwt = require("jsonwebtoken")
+
 const ACCES_TOKEN_SECRET = process.env.ACCES_TOKEN_SECRET || "accestoken"
 
 

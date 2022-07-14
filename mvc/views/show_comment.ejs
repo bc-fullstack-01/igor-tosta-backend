@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Comentarios</title>
+</head>
+<body>
+    <h1><%= comment.content %></h1>
+    <form action="/posts/<%= comment.post %>/comments/<%= comment.id %>?_method=put" method="post">
+        <h2>Editar Comentario</h2>
+        
+        <input type="text" name="comment[content]" id="comment[content]">
+        <button type="submit">Editar</button>
+    </form>
+    <form action="/posts/<%= comment.post %>/comments/<%= comment.id %>?_method=delete" method="post">
+        <button type="submit">Deletar</button>
+    </form>
+    <a href="/posts/<%= comment.post %>">Voltar</a>
+</body>
+</html>

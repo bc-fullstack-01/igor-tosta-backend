@@ -1,7 +1,8 @@
 const moongose = require("mongoose");
 
 const connect = moongose.connect("mongodb://127.0.0.1:27017/mydb_development");
-exports.user = require("./user.js");
+exports.Post = require("./Post.js");
+exports.Comments = require("./Comments")
 
 moongose.connection.on("error", (args) =>{
     console.error(`${JSON.stringify(args)}`);
