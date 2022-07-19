@@ -1,23 +1,33 @@
-const mongoose = require("mongoose");
+const {Schema, model} = require('mongoose');
 
-const commentSchema = new mongoose.Schema(
+const commentSchema = new Schema(
     {
-        post:
-        {
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: "posts", required: true
+        description: {
+            type: String, required: true,
+            minLength: 2
         },
-        content: 
-        {
-            type: String, required: [true, "No empty comments allowed"]
+        profile: {
+            type: Schema.Types.ObjectId,
+            ref: 'Profile'
         },
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'profile', required: true
+        post: {
+            type: Schema.Types.ObjectId, 
+            required: true,
+            ref: 'Post'
+        },
+        likes: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Profile'
+        }],
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+        updateAt: {
+            type: Date,
+            default: Date.now
         }
     }
 );
 
-const comments = mongoose.model("comments", commentSchema);
-
-module.exports = comments;
+module.exports = model('Comment', commentSchema);

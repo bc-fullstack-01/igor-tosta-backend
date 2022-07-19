@@ -1,316 +1,758 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-        "title": "API Social Media",
-        "description": "Documentation API",
-        "version": "1.0.0"
+    "swaggerDefinition": {
+        "info": {
+            "description": "This is a sample server",
+            "title": "Swagger",
+            "version": "1.0.0"
+        },
+        "host": "localhost:4000",
+        "basePath": "/v1",
+        "produces": [
+            "application/json"
+        ],
+        "schemes": [
+            "http",
+            "ws"
+        ],
+        "securityDefinitions": {
+            "JWT": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "Bearer<token>"
+            }
+        },
+        "swagger": "2.0",
+        "paths": {
+            "/posts/{postId}/comments": {
+                "get": {
+                    "parameters": [
+                        {
+                            "name": "postId",
+                            "in": "path",
+                            "description": "Post ID",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": " \nThis function get Comments of a Post",
+                    "tags": [
+                        "Comment"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "An array of comments",
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/Comment"
+                                }
+                            }
+                        },
+                        "default": {
+                            "description": "Unexpected error"
+                        }
+                    },
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                },
+                "post": {
+                    "parameters": [
+                        {
+                            "name": "postId",
+                            "in": "path",
+                            "description": "Post ID",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "comment",
+                            "in": "body",
+                            "description": "Comment Model",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/definitions/Comment"
+                            }
+                        }
+                    ],
+                    "description": " \nThis function post a Comment into a Post",
+                    "tags": [
+                        "Comment"
+                    ],
+                    "responses": {},
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/posts/{postId}/comments/{id}": {
+                "get": {
+                    "parameters": [
+                        {
+                            "name": "postId",
+                            "in": "path",
+                            "description": "Post ID",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "Comment ID",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": " \nThis function gets a Comment by id",
+                    "tags": [
+                        "Comment"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "post"
+                        }
+                    },
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                },
+                "put": {
+                    "parameters": [
+                        {
+                            "name": "comment",
+                            "in": "body",
+                            "description": "Comment Model",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/definitions/Comment"
+                            }
+                        },
+                        {
+                            "name": "postId",
+                            "in": "path",
+                            "description": "Post ID",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "Comment ID",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": " \nThis function updates a Comment by ID",
+                    "tags": [
+                        "Comment"
+                    ],
+                    "responses": {},
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                },
+                "delete": {
+                    "parameters": [
+                        {
+                            "name": "postId",
+                            "in": "path",
+                            "description": "Post ID",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "Comment ID",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": " \nThis function deletes a Comment by id",
+                    "tags": [
+                        "Comment"
+                    ],
+                    "responses": {},
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/feed": {
+                "get": {
+                    "parameters": [],
+                    "description": "\nThis function get Posts for feed",
+                    "tags": [
+                        "Feed"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "An array of Posts",
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/Post"
+                                }
+                            }
+                        },
+                        "Default": {
+                            "description": "Unexpected error"
+                        }
+                    },
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/posts": {
+                "get": {
+                    "parameters": [],
+                    "description": " \nThis function gets all Posts",
+                    "tags": [
+                        "Post"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "An array of Posts",
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/Post"
+                                }
+                            }
+                        },
+                        "default": {
+                            "description": "Unexpected error"
+                        }
+                    },
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                },
+                "post": {
+                    "parameters": [
+                        {
+                            "name": "post",
+                            "in": "body",
+                            "description": "Post Model",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/definitions/Post"
+                            }
+                        }
+                    ],
+                    "description": "\nThis function posts a Post",
+                    "tags": [
+                        "Post"
+                    ],
+                    "responses": {},
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/posts/{id}": {
+                "get": {
+                    "parameters": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "Post ID",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": " \nThis function gets a Post by ID",
+                    "tags": [
+                        "Post"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "post"
+                        }
+                    },
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                },
+                "put": {
+                    "parameters": [
+                        {
+                            "name": "post",
+                            "in": "body",
+                            "description": "Post Model",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/definitions/Post"
+                            }
+                        },
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "Post ID",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": " \nThis function updates a Post by Id",
+                    "tags": [
+                        "Post"
+                    ],
+                    "responses": {},
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                },
+                "delete": {
+                    "parameters": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "Post ID",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": " \nThis function deletes a post by id",
+                    "tags": [
+                        "Post"
+                    ],
+                    "responses": {},
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/profiles": {
+                "get": {
+                    "parameters": [],
+                    "description": "\nThis function list all the Profiles",
+                    "tags": [
+                        "Profile"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Array of Profile's info"
+                        },
+                        "Default": {
+                            "description": "Unexpected error"
+                        }
+                    },
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/profiles/search?q={q}": {
+                "get": {
+                    "parameters": [
+                        {
+                            "name": "q",
+                            "in": "query",
+                            "description": "Search Profile ID",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": "\nThis function search a profile by ID",
+                    "tags": [
+                        "Profile"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Array of Profiles"
+                        }
+                    },
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/profiles/{id}": {
+                "get": {
+                    "parameters": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "Profile ID",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": "\nThis function gets the profile by ID",
+                    "tags": [
+                        "Profile"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Array of Profile's info"
+                        }
+                    },
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/profiles/{id}/follow": {
+                "post": {
+                    "parameters": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "Profile's ID",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": "\nThis function follows profiles by ID",
+                    "tags": [
+                        "Profile"
+                    ],
+                    "responses": {},
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/security/login": {
+                "post": {
+                    "parameters": [
+                        {
+                            "name": "post",
+                            "in": "body",
+                            "description": "Login Model",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/definitions/Login"
+                            }
+                        }
+                    ],
+                    "description": "\nThis function makes Login",
+                    "tags": [
+                        "Security"
+                    ],
+                    "responses": {}
+                }
+            },
+            "/security/register": {
+                "post": {
+                    "parameters": [
+                        {
+                            "name": "post",
+                            "in": "body",
+                            "description": "Registry Model",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/definitions/Registry"
+                            }
+                        }
+                    ],
+                    "description": "\nThis function creates a User",
+                    "tags": [
+                        "Security"
+                    ],
+                    "responses": {}
+                }
+            },
+            "/users/me": {
+                "get": {
+                    "parameters": [],
+                    "description": "\nThis function gets my User",
+                    "tags": [
+                        "User"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "My User"
+                        },
+                        "Default": {
+                            "description": "Unexpected error"
+                        }
+                    },
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                },
+                "put": {
+                    "parameters": [],
+                    "description": "\nThis function updates my User",
+                    "tags": [
+                        "User"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "My User"
+                        },
+                        "Default": {
+                            "description": "Unexpected error"
+                        }
+                    },
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                },
+                "delete": {
+                    "parameters": [],
+                    "description": "\nThis function deletes my Users",
+                    "tags": [
+                        "User"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "My User"
+                        },
+                        "Default": {
+                            "description": "Unexpected error"
+                        }
+                    },
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/posts/{postId}/comments/{id}/like": {
+                "post": {
+                    "parameters": [
+                        {
+                            "name": "postId",
+                            "in": "path",
+                            "description": "Post ID",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "User's ID",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": " \nThis function likes a comment by ID",
+                    "tags": [
+                        "Comment"
+                    ],
+                    "responses": {},
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            }
+        },
+        "definitions": {
+            "Comment": {
+                "required": [
+                    "description",
+                    "profile",
+                    "post"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": ""
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Comment description"
+                    },
+                    "profile": {
+                        "type": "Profile",
+                        "description": "Profile"
+                    },
+                    "post": {
+                        "type": "Post",
+                        "description": "Post"
+                    }
+                }
+            },
+            "Login": {
+                "required": [
+                    "user",
+                    "password"
+                ],
+                "properties": {
+                    "user": {
+                        "type": "string",
+                        "description": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Password"
+                    }
+                }
+            },
+            "Registry": {
+                "required": [
+                    "user",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "User's name"
+                    },
+                    "user": {
+                        "type": "string",
+                        "description": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Password"
+                    }
+                }
+            },
+            "Post": {
+                "required": [
+                    "title",
+                    "description",
+                    "profile"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": ""
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Title"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description"
+                    },
+                    "profile": {
+                        "type": "Profile",
+                        "description": "Profile"
+                    },
+                    "comments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Comment"
+                        }
+                    }
+                }
+            },
+            "Profile": {
+                "required": [
+                    "name",
+                    "user"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": ""
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": ""
+                    },
+                    "user": {
+                        "type": "User",
+                        "description": "User"
+                    },
+                    "null-null": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Profile"
+                        }
+                    }
+                }
+            },
+            "User": {
+                "required": [
+                    "user",
+                    "password"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": ""
+                    },
+                    "user": {
+                        "type": "string",
+                        "description": ""
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": ""
+                    },
+                    "profile": {
+                        "type": "Profile",
+                        "description": "User's Profile"
+                    }
+                }
+            }
+        },
+        "responses": {},
+        "parameters": {},
+        "tags": [
+            {
+                "name": "Comment",
+                "description": "api"
+            },
+            {
+                "name": "Feed",
+                "description": "api"
+            },
+            {
+                "name": "Post",
+                "description": "api"
+            },
+            {
+                "name": "Profile",
+                "description": "api"
+            },
+            {
+                "name": "Security",
+                "description": "api"
+            },
+            {
+                "name": "User",
+                "description": "api"
+            }
+        ]
     },
-    "basePath": "/",
-    "paths": {
-        "/posts":{
-            "get":{
-                "description": "Get All Posts",
-                "summary": "Get All Posts",
-                "tags":["Post"],
-                "responses":{
-                "200":{"description": "Ok"}
-               } 
-            },
-            "post":{
-                "description": "Creat a Post",
-                "summary": "Creat a Post",
-                "tags":["Post"],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "type": "object",
-                                "properties":{
-                                    "title":{"type": "string"},
-                                    "content":{"type": "string"}
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses":{
-                    "201":{"description": "Created a Post"}
-                }
-            }
-        },
-        "/posts/{id}":{
-            "get": {
-                "description": "Seach for a Post",
-                "summary": "Seach for a Post by id",
-                "tags": ["Post"],
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Post Id",
-                    "required": true
-                }],
-                "responses":{
-                    "200":{
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "type": "object"
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete a Post",
-                "summary": "Delete a Post",
-                "tags": ["Post"],
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Post Id",
-                    "required": true
-                }],
-                "responses":{
-                    "200":{"description": "Successfully Deleted"}
-                }
-            },
-            "put":{
-                "description": "Update a Post",
-                "summary": "Update a Post",
-                "tags": ["Post"],
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Post Id",
-                    "required": true
-                }],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "type": "object",
-                                "properties":{
-                                    "title":{"type": "string"},
-                                    "content":{"type": "string"}
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses":{
-                    "200":{"description": "Updated a Post"}
-                }
-            }
-        },
-        "/posts/{postId}":{
-            "post":{
-                "description": "Create a Comment",
-                "summary": "Create a Comment",
-                "tags":["Comment"],
-                "parameters": [{
-                    "name": "postId",
-                    "in": "path",
-                    "description": "Post Id",
-                    "required": true
-                }],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "type": "object",
-                                "properties":{
-                                    "content":{"type": "string"}
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses":{
-                    "201":{"description": "Created a Comment"}
-                }
-            }
-        },
-        "/posts/{postId}/comments/{id}":{
-            "get":{
-                "description": "Seach for a Comment by Id",
-                "summary": "Seach for a Comment by Id",
-                "tags": ["Comment"],
-                "parameters": [{
-                    "name": "postId",
-                    "in": "path",
-                    "description": "Post Id",
-                    "required": true
-                },
-                {
-                    "name": "id",
-                    "in": "path",
-                    "description": "Comment Id",
-                    "required": true
-                }],
-                "responses":{
-                    "200":{
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "type": "object"
-                            }
-                        }
-                    }
-                }
-            },
-            "put":{
-                "description": "Update a Comment",
-                "summary": "Update a Comment",
-                "tags": ["Comment"],
-                "parameters": [{
-                    "name": "postId",
-                    "in": "path",
-                    "description": "Post Id",
-                    "required": true
-                },
-                {
-                    "name": "id",
-                    "in": "path",
-                    "description": "Comment Id",
-                    "required": true
-                }],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "type": "object",
-                                "properties":{
-                                    "content":{"type": "string"}
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses":{
-                    "200":{"description": "Updated a Comment"}
-                }
-            },
-            "delete": {
-                "description": "Delete a Comment",
-                "summary": "Delete a Comment",
-                "tags": ["Comment"],
-                "parameters": [{
-                    "name": "postId",
-                    "in": "path",
-                    "description": "Post Id",
-                    "required": true
-                },
-                {
-                    "name": "id",
-                    "in": "path",
-                    "description": "Comment Id",
-                    "required": true
-                }],
-                "responses":{
-                    "200":{"description": "Successfully Deleted"}
-                }
-            }
-        },
-        "/me":{
-            "get":{
-                "security": [{"bearerAuth": []}],
-                "description": "Recover a User",
-                "summary": "Recover a User",
-                "tags": ["User"],
-                "responses":{
-                    "200":{"description": "Ok"}
-                } 
-            },
-            "put":{
-                "security":[{"bearerAuth": []}],
-                "description": "Update a User",
-                "summary": "Update a User",
-                "tags": ["User"],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "type": "object",
-                                "properties":{
-                                    "name": {"type": "string"},
-                                    "user":{"type": "string"},
-                                    "password":{"type": "string"}
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses":{
-                    "200":{"description": "Successfully Update"}
-                }
-            },
-            "delete":{
-                "security": [{"bearerAuth": []}],
-                "description": "User Deleted",
-                "summary": "User Deleted",
-                "tags": ["User"],
-                "responses":{
-                    "200":{"description": "Successfully Delete"}
-                }
-            }
-        },
-        "/feed":{
-            "get":{
-                "security": [{"bearerAuth": []}],
-                "description": "Recover All Posts from Followed Profiles",
-                "summary": "Recover All Posts from Followed Profiles",
-                "tags": ["Feed"],
-                "responses":{
-                    "200":{"description": "Ok"}
-                } 
-            }
-        },
-        "/register":{
-            "post":{
-                "description": "Creat a User",
-                "summary": "Creat a User",
-                "tags":["Security"],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "type": "object",
-                                "properties":{
-                                    "name": "string",
-                                    "user":{"type": "string"},
-                                    "password":{"type": "string"}
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses":{
-                    "201":{"description": "Created a User"}
-                }
-            }
-        },
-        "/login":{
-            "post":{
-                "description": "User Login",
-                "summary": "User Login",
-                "tags":["Security"],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "type": "object",
-                                "properties":{
-                                    "user":{"type": "string"},
-                                    "password":{"type": "string"}
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses":{
-                    "201":{"description": "User Login Successfully"}
-                }
-            }
-        }
-    }
+    "files": [
+        "./routers/**/*.js",
+        "./models/**/*.js"
+    ]
 }

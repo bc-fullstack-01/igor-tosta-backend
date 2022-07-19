@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <title>Reciever</title>
+</head>
+
+<body>
+    <h2 id="msgBox"></h2>
+
+    <script>
+        const msgBox = document.getElementById("msgBox")
+        const token = prompt()
+        const socket = io("/", { auth: { token } })
+       
+        socket.on("connect", () => {
+            console.log(socket)
+            m.innerHTML = (`connected as ${socket.id}` + "<br/>")
+        })
+        socket.on("connect_profile", profile => {
+            socket.profile = profile
+            m.innerHTML += (`connected ${profile.name}` + "<br/>")
+        })
+        socket.on("disconnect", () => {
+            m.innerHTML += (`connected ${socket.connected}` + "<br/>")
+        })
+        socket.on("post", data => {
+            m.innerHTML += ("post:" + JSON.stringify(data) + "<br/>")
+        })
+        socket.on("post-like", data => {
+            m.innerHTML += ("post-like:" + JSON.stringify(data) + "<br/>")
+        })
+        socket.on("comment", data => {
+            m.innerHTML += ("comment:" + JSON.stringify(data) + "<br/>")
+        })
+        socket.on("comment-like", data => {
+            m.innerHTML += ("comment-like:" + JSON.stringify(data) + "<br/>")
+        })
+        socket.on("connect_error", err => {
+            alert(err)
+        })
+    </script>
+</body>
+
+</html>

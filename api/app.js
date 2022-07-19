@@ -1,71 +1,100 @@
-const express = require("express");
-const createError = require("http-errors");
-const logger = require("morgan");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const helmet = require("helmet");
-const swagger = require("swagger-ui-express");
-const jwt = require('jsonwebtoken');
+const path = require('path')
+const express = require('express')
+const bodyParser = require('body-parser')
+const logger = require('morgan')
+const createError = require('http-errors')
+const helmet = require('helmet')
+const cors = require('cors')
+const esg = require('express-swagger-generator')
+const jwt = require('jsonwebtoken')
 
-const ACCES_TOKEN_SECRET = process.env.ACCES_TOKEN_SECRET || "accestoken"
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'accestoken'
 
-const swaggerDocument = require("./swagger");
-
-const {Connection, Profile, User} = require("./model");
-const postRouters = require("./routers/postRouters");
-const commentRouters = require("./routers/commentRouters");
-const userRouters = require("./routers/userRouters");
-const profileRouters = require("./routers/profileRouters");
-const feedRouters = require("./routers/feedRouters");
-const securityRouters = require("./routers/securityRouters");
-
+const defaultOptions = require('./swagger.json')
+const { Post, Comment, User, Security, Profile, Feed } = require('./routers')
+const { User: UserModel } = require('./model')
+const pubsub = require('./lib/pubsub')
+const options = Object.assign(defaultOptions, { basedir: __dirname })
 
 const app = express();
+const expressSwagger = esg(app);
+expressSwagger(options);
 
-app.use(cors())
-app.use(helmet());
-app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocument))
-app.use(logger("dev"));
-app.use(bodyParser.json());
-app.use(express.urlencoded({extended: true}));
+app.use(cors());
+// app.use(helmet()); // comment for html simple test
 
-app.use((req, res, next) => Connection
-    .then(() => next())
-    .catch(err => next(err))
-)
+const urlencodedMiddleware = bodyParser.urlencoded({
+    extended: true
+})
 
-const authenticateToken = (req, res, next) =>{
-    const token = req.headers.authorization && req.headers.authorization.split(" ")[1]
+app.use((req, res, next) => (/^multipart\//i.test(req.get('Content-Type')) ? next() : urlencodedMiddleware(req, res, next)));
+app.use(bodyParser.json({
+    defer: true
+}))
+app.use(logger('tiny'))
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers.authorization
+    const token = authHeader && authHeader.split(' ')[1]
     if (token == null) return next(createError(401))
-    jwt.verify(token, ACCES_TOKEN_SECRET, (err, user) =>{
+    jwt.verify(token, ACCES_TOKEN_SECRET, (err, user) => {
         if (err) return next(createError(403))
-        User.findOne({user})
-            .then(u =>{
+        UserModel.findOne({ user }).populate('profile')
+            .then(u => {
                 req.user = u
                 next()
             })
-            .catch(err => next(err))
     })
 }
 
-app.use("/", securityRouters);
-app.use("/", authenticateToken, userRouters);
-app.use("/", authenticateToken, postRouters);
-app.use("/", authenticateToken, commentRouters);
-app.use("/", authenticateToken, profileRouters);
-app.use("/", authenticateToken, feedRouters);
+app.use(express.static(path.join(__dirname, 'public')))
 
-app.use((req,res,next) =>next(createError(404)));
+app.use(pubsub.pub)
 
-app.use((err, req, res, next) =>{ 
-    if( err.name === "ValidationError"){
-        res.status(err.status).send({message: err.message});
-    }
-    else if((err.status === 404) || ( err.name === "CastError") ){
-        res.status(404).send({message:`Não existe rota para ${req.originalUrl}`});
-    }else{
-        res.status(err.status || 500).send({message:err.message});
-    }
+Post.use('/', authenticateToken, Comment)
+app.use('/v1/posts', authenticateToken, Post)
+app.use('/v1/users', authenticateToken, User)
+app.use('/v1/profiles', authenticateToken, Profile)
+app.use('/v1/feed', authenticateToken, Feed)
+app.use('/v1/security', Security)
+
+app.get('/v1/seed', (req, res, next) => require('./seed')
+    .then(() => res.status(200).end())
+    .catch(next)
+)
+
+app.use('/favicon.ico', (req, res) => {
+    res.end()
 })
 
-module.exports = app;
+app.use(function (req, res, next) {
+    next(createError(404))
+})
+
+app.use(function (error, req, res, next) {
+    console.log(error);
+    if (error.name && error.name === 'ValidationError') {
+        res.status(406).json(error);
+    } else if ((error.status && error.status === 404) || (error.name && error.name === 'CastError')) {
+        res.status(404).json({
+            url: req.originalUrl,
+            error: {
+                message: 'Not Found!'
+            }
+        })
+    } else if (error.code === 11000) {
+        res.status(500).json({
+            url: req.originalUrl,
+            error: {
+                message: 'Duplicated key not Allowed!'
+            }
+        })
+    } else {
+        // error page
+        res.status(error.status || 500).json({
+            url: req.originalUrl,
+            error
+        })
+    }
+})
+module.exports = app

@@ -1,33 +1,89 @@
-const express = require("express");
-const {Post, Comments} = require("../model");
-
-
+const createError = require('http-errors');
+const express = require('express');
 const router = express.Router();
 
+const { Comment, Connection, Post } =  require('../model');
+
 router
-    .route("/comments/:postId/comments/:id")
+    .param('postId', (req, res, next, id) => Promise.resolve()
+        .then(() => {
+            res.locals.post = { id }
+            next()
+        })
+        .catch(err => next(err))
+    )
+    .route('/:postId/comments')
+    .all((req, res, next) => Promise.resolve()
+        .then(() => Connection.then())
+        .then(() => next())
+        .catch(err => next(err))
+    )
     .get((req, res, next) => Promise.resolve()
-        .then(() => Comments.findById(req.params.id))
-        .then(data => res.status(200).json(data))
-        .catch(err => next(err)))
-    .put((req, res, next) => Promise.resolve()
-        .then(() => Comments.findByIdAndUpdate(req.params.id, req.body,{runValidators: true} ))
-        .then(() => res.status(200).send({message: "Updated a Comment!"}))
-        .catch(err => next(err)))
-    .delete((req, res, next) => Promise.resolve()
-        .then(() => Comments.findById(req.params.id))
-        .then(data => Post.findByIdAndUpdate(data.post,{$pull: {comments: data.id}}))
-        .then(() => Comments.findByIdAndDelete(req.params.id))
-        .then(() => res.status(200).send({message: "Successfully Deleted!"}))
-        .catch(err => next(err)));
+        .then(() => Comment.find({ post: res.locals.post.id }).populate('profile'))
+        .then((data) => res.status(200).json(data))
+        .catch(err => next(err))
+    )
+    .post((req, res, next) => Promise.resolve()
+        .then(() => new Comment(Object.assign(req.body, { post: res.locals.post.id, profile: req.user.profile._id })).save())
+        .then((comment) => Post.findById(comment.post)
+            .then(post => Object.assign(post, { comments: [...post.comments, comment._id] }))
+            .then(post => Post.findByIdAndUpdate(comment.post, post))
+            .then(args => req.publish('comment', [args.profile], args))
+            .then(() => comment)
+        )
+        .then((data) => res.status(201).json(data))
+        .catch(err => next(err))
+    )
 
 router
-    .route("/comments/:postId")
-    .post((req, res, next) => Promise.resolve()
-        .then(() => new  Comments(Object.assign(req.body, {post: req.params.postId})).save())
-        .then(data => Post.findByIdAndUpdate(data.post,{$push: {comments: data}}))
-        .then(() => res.status(201).send({message: "Created a Comment"}))
-        .catch(err => next(err)));
+    .param('id', (req, res, next, id) => Promise.resolve()
+        .then(() => Connection.then())
+        .then(() => next())
+        .catch(err => next(err))
+    .route('/:postId/comments/:id')
+    )
+    .get((req, res, next) => Promise.resolve()
+        .then(() => Comment.findById(req.param.id).populate('profile'))
+        .then((data) => data ? res.status(200).json(data) : next(createError(404)))
+        .catch(err => next(err))
+    )
+    .put((req, res, next) => Promise.resolve()
+        .then(() => Comment.findByIdAndUpdate(req.param.id, { ...req.body, updateAt: Date.now() }, { runValidators: true }))
+        .then((data) => res.status(203).json(data))
+        .catch(err => next(err))
+    )
+    .delete((req, res, next, id) => Promise.resolve()
+        .then(() => Comment.deleteOne({ _id: req.params.id }))
+        .then((data) => res.status(203).json(data))
+        .catch(err => next(err))
+    )
 
+router
+    .param('id', (req, res, next, id) => Promise.resolve()
+        .then(() => Connection.then())
+        .then(() => next())
+        .catch(err => next(err))
+    .route('/:postId/comments/:id/like')
+    )
+    .post((req, res, next) => Promise.resolve()
+        .then(() => Comment.findByIdAndUpdate({ _id: req.params.id }, { $addToSet: { likes: req.user.profile._id } }))
+        .then(args => req.publish('comment-like', [args.profile], args))
+        .then((data) => res.status(203).json(data))
+        .catch(err => next(err))
+    )
+
+router
+    .param('id', (req, res, next, id) => Promise.resolve()
+        .then(() => Connection.then())
+        .then(() => next())
+        .catch(err => next(err))
+    .route('/:postId/comments/:id/unlike')
+    )
+    .post((req, res, next) => Promise.resolve()
+        .then(() => Comment.findByIdAndUpdate({ _id: req.params.id }, { $pull: { likes: req.user.profile._id } }))
+        .then(args => req.publish('comment-unlike', [args.profile], args))
+        .then((data) => res.status(203).json(data))
+        .catch(err => next(err))
+    )
 
 module.exports = router;

@@ -1,10 +1,16 @@
-const express = require("express");
-const {Profile} = require("../model")
-
+const createError = require('http-errors');
+const express = require('express');
 const router = express.Router();
 
+const { Profile, Connection } = require('../model');
+
 router
-    .route("/profile")
+    .route('/')
+    .all((req, res, next) => Promise.resolve()
+        .then(() => Connection.then())
+        .then(() => next())
+        .catch(err => next(err))
+    )
     .get((req, res, next) => Promise.resolve()
         .then(() => Profile.find({}))
         .then(data => res.status(200).json(data))  
@@ -12,30 +18,43 @@ router
     )
 
 router
-    .route("/profile/search")
-    .get((req, res, next) => Promise.resolve()
-        .then(() => Profile.find({name:{$regex: req.query.q}}))
-        .then(data => res.status(200).json(data))  
-        .catch(err => next(err))  
-    )
-
-router
-    .route("/profile/:id")
-    .get((req, res, next) => Promise.resolve()
-        .then(() => Profile.findById(req.params.id))
-        .then(data => res.status(200).json(data))
+    .param('id', (req, res, next, id) => Promise.resolve()
+        .then(() => Connection.then())
+        .then(() => next())
         .catch(err => next(err))
+    .route('/search')
     )
+    .get((req, res, next) => Promise.resolve()
+        .then(() => Profile.find({ $text: { $search: `${req.query.q}` } }, { score: { $meta: 'textScore' } }).sort({ score: { $meta: 'textScore' } }))
+        .then(data => data ? res.status(200).json(data) : next(createError(404))) 
+        .catch(err => next(err))  
+    )   
 
 router
-    .route("/profile/:id/follow")
-    .post((req, res, next) => Promise.resolve()
-        .then(() => Profile.findByIdAndUpdate(req.params.id, {followers: req.profile.id}))
-        .then(data => Profile.findByIdAndUpdate(req.profile.id, {following: data.profile.id}))
-        .then(data => res.status(200).send({message: "Profile followed"}))  
-        .catch(err => next(err))  
+    .param('id', (req, res, next, id) => Promise.resolve()
+        .then(() => Connection.then())
+        .then(() => next())
+        .catch(err => next(err))
+    .route('/:id')
     )
+    .get((req, res, next) => Promise.resolve()
+        .then(() => Profile.findById(req.params.id).populate(['following', 'followers']))
+        .then(data => data ? res.status(200).json(data) : next(createError(404))) 
+        .catch(err => next(err))  
+    ) 
 
-
+router
+    .param('id', (req, res, next, id) => Promise.resolve()
+        .then(() => Connection.then())
+        .then(() => next())
+        .catch(err => next(err))
+    .route('/:id/follow')
+    )
+    .post((req, res, next) => Promise.resolve()
+        .then(() => Profile.findOneAndUpdate({ _id: req.params.id }, { $push: { followers: req.user.profile._id } }))
+        .then(() => Profile.findOneAndUpdate({ _id: req.user.profile._id }, { $push: { following: req.params.id } }))
+        .then(data => data ? res.status(203).json(data) : next(createError(404))) 
+        .catch(err => next(err))  
+    ) 
 
 module.exports = router

@@ -1,34 +1,43 @@
+const createError = require('http-errors');
 const express = require("express");
-const {User, Profile} = require("../model");
-
-const bcrypt =  require("bcrypt")
-
+const bcrypt =  require("bcrypt");
 const router = express.Router()
 
+const { User, Connection } = require("../model");
+
 router
-    .route("/me")
+    .route('/')
+    .all((req, res, next) => Promise.resolve()
+        .then(() => Connection.then())
+        .then(() => next())
+        .catch(err => next(err))
+    )
+
+router
+    .param('id', (req, res, next, id) => Promise.resolve()
+        .then(() => Connection.then())
+        .then(() => next())
+        .catch(err => next(err))
+    .route('/me')
+    )
     .get((req, res, next) => Promise.resolve()
-        .then(() => User.findById( req.profile.user))
-        .then(data => res.status(200).json(data))
+        .then(() => User.findById( req.user.id).populate({ path: 'profile' }))
+        .then(data => data ? res.status(200).json(data) : next(createError(404)))
         .catch(err => next(err)))
     .put((req, res, next) => Promise.resolve()
-        .then(() =>{ if(req.body.password != null){
-            return bcrypt.hash(req.body.password, 10)
-        }})
-        .then((data) =>data? 
-            User.findByIdAndUpdate(req.profile.user, {...req.body, password: data}, {runValidators: true}):
-            User.findByIdAndUpdate(req.profile.user, req.body, {runValidators: true}))
-        .then(() =>{if(req.body.name != null){
-            return req.body.name
-        }})
-        .then(data => data? Profile.findByIdAndUpdate(req.profile, {name: data},{runValidators: true}): {})
-        .then(()=>res.status(200).send({message: "Successfully Update User"}))
+        .then(() => bcrypt.hash(req.body.password, 10))
+        .then((passHashed) => {
+            delete req.body.user
+            req.body.password = passHashed
+            req.body.updateAt = Date.now()
+        })
+        .then(() => User.findByIdAndUpdate(req.user.id, req.body, { renValidators: true }))
+        .then((data) => res.status(203).json(data))
         .catch(err => next(err))
     )
     .delete((req, res, next) => Promise.resolve()
-        .then(() => Profile.findByIdAndDelete(req.profile))
-        .then(() => User.findByIdAndDelete(req.profile.user))
-        .then(() => res.status(200).send({message: "Successfully Deleted User"}))
+        .then(() => User.deleteOne({ _id: req.user.id }))
+        .then((data) => res.status(200).json(data))
         .catch(err => next(err))
     )
 
