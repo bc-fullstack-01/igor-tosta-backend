@@ -1,9 +1,9 @@
 const Rascal = require('rascal')
 const defaultConfig = require('../config.json')
-defaultConfig.vhost['/'].connection.url = process.env.AMQP_URL || defaultConfig.vhost['/'].connection.url
+defaultConfig.vhosts['/'].connection.url = process.env.AMQP_URL || defaultConfig.vhosts['/'].connection.url
 const config = Rascal.withDefaultConfig(defaultConfig)
-const publisher = Object.keys(defaultConfig.vhost['/'].publications)[0]
-const consumer = Object.keys(defaultConfig.vhost['/'].subscriptions)[0]
+const publisher = Object.keys(defaultConfig.vhosts['/'].publications)[0]
+const consumer = Object.keys(defaultConfig.vhosts['/'].subscriptions)[0]
 
 module.exports = {
     pub: (req, res, next) => Rascal.Broker.create(Rascal.withDefaultConfig(config), function (err, broker) {

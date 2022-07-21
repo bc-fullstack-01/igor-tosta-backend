@@ -1,6 +1,6 @@
 {
-    "$schema": "../node_modules/rascal/lib/config/schema.json",
-    "vhost": {
+    "$schema": "./node_modules/rascal/lib/config/schema.json", 
+    "vhosts": {
         "/": {
             "publicationChannelPools": {
                 "confirmPool": {

@@ -19,7 +19,7 @@
                 "type": "apiKey",
                 "in": "header",
                 "name": "Authorization",
-                "description": "Bearer<token>"
+                "description": "Bearer <token>"
             }
         },
         "swagger": "2.0",
@@ -30,18 +30,18 @@
                         {
                             "name": "postId",
                             "in": "path",
-                            "description": "Post ID",
+                            "description": "post id.",
                             "required": true,
                             "type": "string"
                         }
                     ],
-                    "description": " \nThis function get Comments of a Post",
+                    "description": "This function get comments of a post",
                     "tags": [
                         "Comment"
                     ],
                     "responses": {
                         "200": {
-                            "description": "An array of comments",
+                            "description": "An array of posts",
                             "schema": {
                                 "type": "array",
                                 "items": {
@@ -64,21 +64,21 @@
                         {
                             "name": "postId",
                             "in": "path",
-                            "description": "Post ID",
+                            "description": "post id.",
                             "required": true,
                             "type": "string"
                         },
                         {
                             "name": "comment",
                             "in": "body",
-                            "description": "Comment Model",
+                            "description": "the new point",
                             "required": true,
                             "schema": {
                                 "$ref": "#/definitions/Comment"
                             }
                         }
                     ],
-                    "description": " \nThis function post a Comment into a Post",
+                    "description": "This function post a Comment into a Post",
                     "tags": [
                         "Comment"
                     ],
@@ -96,19 +96,19 @@
                         {
                             "name": "postId",
                             "in": "path",
-                            "description": "Post ID",
+                            "description": "post id.",
                             "required": true,
                             "type": "string"
                         },
                         {
                             "name": "id",
                             "in": "path",
-                            "description": "Comment ID",
+                            "description": "comment id.",
                             "required": true,
                             "type": "string"
                         }
                     ],
-                    "description": " \nThis function gets a Comment by id",
+                    "description": "This function to get a comment by id",
                     "tags": [
                         "Comment"
                     ],
@@ -128,7 +128,7 @@
                         {
                             "name": "comment",
                             "in": "body",
-                            "description": "Comment Model",
+                            "description": "the new point",
                             "required": true,
                             "schema": {
                                 "$ref": "#/definitions/Comment"
@@ -137,19 +137,19 @@
                         {
                             "name": "postId",
                             "in": "path",
-                            "description": "Post ID",
+                            "description": "post id.",
                             "required": true,
                             "type": "string"
                         },
                         {
                             "name": "id",
                             "in": "path",
-                            "description": "Comment ID",
+                            "description": "comment id.",
                             "required": true,
                             "type": "string"
                         }
                     ],
-                    "description": " \nThis function updates a Comment by ID",
+                    "description": "This function to put a comment by id",
                     "tags": [
                         "Comment"
                     ],
@@ -165,19 +165,19 @@
                         {
                             "name": "postId",
                             "in": "path",
-                            "description": "Post ID",
+                            "description": "post id.",
                             "required": true,
                             "type": "string"
                         },
                         {
                             "name": "id",
                             "in": "path",
-                            "description": "Comment ID",
+                            "description": "comment id.",
                             "required": true,
                             "type": "string"
                         }
                     ],
-                    "description": " \nThis function deletes a Comment by id",
+                    "description": "This function to delete a comment by id",
                     "tags": [
                         "Comment"
                     ],
@@ -189,16 +189,84 @@
                     ]
                 }
             },
-            "/feed": {
+            "/posts/{postId}/comments/{id}/like": {
+                "post": {
+                    "parameters": [
+                        {
+                            "name": "postId",
+                            "in": "path",
+                            "description": "post id.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "comment id.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": "\nThis function to get a post by id",
+                    "tags": [
+                        "Comment"
+                    ],
+                    "responses": {},
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/posts/{postId}/comments/{id}/unlike": {
+                "post": {
+                    "parameters": [
+                        {
+                            "name": "postId",
+                            "in": "path",
+                            "description": "post id.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "comment id.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": "\nThis function to get a post by id",
+                    "tags": [
+                        "Comment"
+                    ],
+                    "responses": {},
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/feed?page={page}": {
                 "get": {
-                    "parameters": [],
-                    "description": "\nThis function get Posts for feed",
+                    "parameters": [
+                        {
+                            "name": "page",
+                            "in": "query",
+                            "description": "current page.",
+                            "required": false,
+                            "type": "integer"
+                        }
+                    ],
+                    "description": "This function get posts",
                     "tags": [
                         "Feed"
                     ],
                     "responses": {
                         "200": {
-                            "description": "An array of Posts",
+                            "description": "An array of posts",
                             "schema": {
                                 "type": "array",
                                 "items": {
@@ -206,7 +274,7 @@
                                 }
                             }
                         },
-                        "Default": {
+                        "default": {
                             "description": "Unexpected error"
                         }
                     },
@@ -217,16 +285,44 @@
                     ]
                 }
             },
+            "/seed": {
+                "get": {
+                    "parameters": [],
+                    "description": "This function get my users",
+                    "tags": [
+                        "DEV"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": ""
+                        }
+                    }
+                }
+            },
+            "/": {
+                "get": {
+                    "parameters": [],
+                    "description": "ws",
+                    "tags": [
+                        "DEV"
+                    ],
+                    "responses": {
+                        "101": {
+                            "description": ""
+                        }
+                    }
+                }
+            },
             "/posts": {
                 "get": {
                     "parameters": [],
-                    "description": " \nThis function gets all Posts",
+                    "description": "This function get posts",
                     "tags": [
                         "Post"
                     ],
                     "responses": {
                         "200": {
-                            "description": "An array of Posts",
+                            "description": "An array of posts",
                             "schema": {
                                 "type": "array",
                                 "items": {
@@ -249,14 +345,14 @@
                         {
                             "name": "post",
                             "in": "body",
-                            "description": "Post Model",
+                            "description": "the new point",
                             "required": true,
                             "schema": {
                                 "$ref": "#/definitions/Post"
                             }
                         }
                     ],
-                    "description": "\nThis function posts a Post",
+                    "description": "This function Post a Post",
                     "tags": [
                         "Post"
                     ],
@@ -274,12 +370,12 @@
                         {
                             "name": "id",
                             "in": "path",
-                            "description": "Post ID",
+                            "description": "post id.",
                             "required": true,
                             "type": "string"
                         }
                     ],
-                    "description": " \nThis function gets a Post by ID",
+                    "description": "This function to get a post by id",
                     "tags": [
                         "Post"
                     ],
@@ -299,7 +395,7 @@
                         {
                             "name": "post",
                             "in": "body",
-                            "description": "Post Model",
+                            "description": "the new point",
                             "required": true,
                             "schema": {
                                 "$ref": "#/definitions/Post"
@@ -308,12 +404,12 @@
                         {
                             "name": "id",
                             "in": "path",
-                            "description": "Post ID",
+                            "description": "post id.",
                             "required": true,
                             "type": "string"
                         }
                     ],
-                    "description": " \nThis function updates a Post by Id",
+                    "description": "This function to get a post by id",
                     "tags": [
                         "Post"
                     ],
@@ -329,12 +425,58 @@
                         {
                             "name": "id",
                             "in": "path",
-                            "description": "Post ID",
+                            "description": "post id.",
                             "required": true,
                             "type": "string"
                         }
                     ],
-                    "description": " \nThis function deletes a post by id",
+                    "description": "This function to get a post by id",
+                    "tags": [
+                        "Post"
+                    ],
+                    "responses": {},
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/posts/{id}/like": {
+                "post": {
+                    "parameters": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "post id.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": "\nThis function to like a post",
+                    "tags": [
+                        "Post"
+                    ],
+                    "responses": {},
+                    "security": [
+                        {
+                            "JWT": []
+                        }
+                    ]
+                }
+            },
+            "/posts/{id}/unlike": {
+                "post": {
+                    "parameters": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "description": "post id.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "description": "\nThis function to unlike a post",
                     "tags": [
                         "Post"
                     ],
@@ -349,15 +491,15 @@
             "/profiles": {
                 "get": {
                     "parameters": [],
-                    "description": "\nThis function list all the Profiles",
+                    "description": "This function list the profiles",
                     "tags": [
                         "Profile"
                     ],
                     "responses": {
                         "200": {
-                            "description": "Array of Profile's info"
+                            "description": "An array of user info"
                         },
-                        "Default": {
+                        "default": {
                             "description": "Unexpected error"
                         }
                     },
@@ -374,18 +516,18 @@
                         {
                             "name": "q",
                             "in": "query",
-                            "description": "Search Profile ID",
+                            "description": "profile id.",
                             "required": true,
                             "type": "string"
                         }
                     ],
-                    "description": "\nThis function search a profile by ID",
+                    "description": "\nThis function to get a post by id",
                     "tags": [
                         "Profile"
                     ],
                     "responses": {
                         "200": {
-                            "description": "Array of Profiles"
+                            "description": "profile"
                         }
                     },
                     "security": [
@@ -401,18 +543,18 @@
                         {
                             "name": "id",
                             "in": "path",
-                            "description": "Profile ID",
+                            "description": "profile id.",
                             "required": true,
                             "type": "string"
                         }
                     ],
-                    "description": "\nThis function gets the profile by ID",
+                    "description": "This function to get a post by id",
                     "tags": [
                         "Profile"
                     ],
                     "responses": {
                         "200": {
-                            "description": "Array of Profile's info"
+                            "description": "profile"
                         }
                     },
                     "security": [
@@ -428,12 +570,12 @@
                         {
                             "name": "id",
                             "in": "path",
-                            "description": "Profile's ID",
+                            "description": "user's id.",
                             "required": true,
                             "type": "string"
                         }
                     ],
-                    "description": "\nThis function follows profiles by ID",
+                    "description": "\nThis function to get a post by id",
                     "tags": [
                         "Profile"
                     ],
@@ -451,14 +593,14 @@
                         {
                             "name": "post",
                             "in": "body",
-                            "description": "Login Model",
+                            "description": "the new user",
                             "required": true,
                             "schema": {
                                 "$ref": "#/definitions/Login"
                             }
                         }
                     ],
-                    "description": "\nThis function makes Login",
+                    "description": "\nThis function creates a user",
                     "tags": [
                         "Security"
                     ],
@@ -471,14 +613,14 @@
                         {
                             "name": "post",
                             "in": "body",
-                            "description": "Registry Model",
+                            "description": "the new user",
                             "required": true,
                             "schema": {
                                 "$ref": "#/definitions/Registry"
                             }
                         }
                     ],
-                    "description": "\nThis function creates a User",
+                    "description": "\nThis function creates a user",
                     "tags": [
                         "Security"
                     ],
@@ -488,15 +630,15 @@
             "/users/me": {
                 "get": {
                     "parameters": [],
-                    "description": "\nThis function gets my User",
+                    "description": "This function get my users",
                     "tags": [
                         "User"
                     ],
                     "responses": {
                         "200": {
-                            "description": "My User"
+                            "description": "my user"
                         },
-                        "Default": {
+                        "default": {
                             "description": "Unexpected error"
                         }
                     },
@@ -507,16 +649,26 @@
                     ]
                 },
                 "put": {
-                    "parameters": [],
-                    "description": "\nThis function updates my User",
+                    "parameters": [
+                        {
+                            "name": "post",
+                            "in": "body",
+                            "description": "the new user",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    ],
+                    "description": "This function update my user",
                     "tags": [
                         "User"
                     ],
                     "responses": {
                         "200": {
-                            "description": "My User"
+                            "description": "my user"
                         },
-                        "Default": {
+                        "default": {
                             "description": "Unexpected error"
                         }
                     },
@@ -528,48 +680,18 @@
                 },
                 "delete": {
                     "parameters": [],
-                    "description": "\nThis function deletes my Users",
+                    "description": "This function update my user",
                     "tags": [
                         "User"
                     ],
                     "responses": {
                         "200": {
-                            "description": "My User"
+                            "description": "my user"
                         },
-                        "Default": {
+                        "default": {
                             "description": "Unexpected error"
                         }
                     },
-                    "security": [
-                        {
-                            "JWT": []
-                        }
-                    ]
-                }
-            },
-            "/posts/{postId}/comments/{id}/like": {
-                "post": {
-                    "parameters": [
-                        {
-                            "name": "postId",
-                            "in": "path",
-                            "description": "Post ID",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "id",
-                            "in": "path",
-                            "description": "User's ID",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "description": " \nThis function likes a comment by ID",
-                    "tags": [
-                        "Comment"
-                    ],
-                    "responses": {},
                     "security": [
                         {
                             "JWT": []
@@ -732,6 +854,10 @@
             {
                 "name": "Feed",
                 "description": "api"
+            },
+            {
+                "name": "DEV",
+                "description": ""
             },
             {
                 "name": "Post",
