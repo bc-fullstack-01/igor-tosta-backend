@@ -5,17 +5,18 @@
   "main": "index.js",
   "directories": {
     "lib": "lib"
-  },  
+  },
   "scripts": {
     "mongo:start": "docker run --name mongodb -d -p 27017:27017 mongo:latest",
     "mongo:rm": "docker rm -f mongodb",
     "mongo:seed": "node seed.js",
     "mongo:rs": "npm run mongo:rm && npm run mongo:start && npm run mongo:seed",
-    "start": "nodemon -V --exitcrash ."
+    "start": "nodemon index.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.131.0",
     "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "ejs": "^3.1.8",
