@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const { cp } = require('fs');
-const { Post, Comment, Profile, User, Connection } = require('./models')
+const { Post, Comment, Profile, User } = require('./model')
+const { Connection } = require('./model');
 
 function createUser(name) {
     return bcrypt.hash('123456', 10)
@@ -42,5 +43,5 @@ Connection
         .then(([profile1, profile2]) => Promise.all([createPost(profile1), createPost(profile2)]))
     )
     .then(() => console.log('Mongo is Seeded'))
-    .then(()=> process.exit(0))
+    // .then(() => process.exit(0))
     .catch(err => console.error(err))

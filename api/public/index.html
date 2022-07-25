@@ -3,40 +3,41 @@
 
 <head>
     <script src="/socket.io/socket.io.js"></script>
-    
     <title>Reciever</title>
 </head>
 
 <body>
+    <h1>Your messages here</h1>
     <h2 id="msgBox"></h2>
 
     <script>
         const msgBox = document.getElementById("msgBox")
         const token = prompt()
-        const socket = io("/", { auth: { token } })
-       
+        const socket = io("/v1", { auth: { token } })
+
         socket.on("connect", () => {
             console.log(socket)
-            m.innerHTML = (`connected as ${socket.id}` + "<br/>")
+            msgBox.innerHTML = (`connected as ${socket.id}` + "<br/>")
         })
-        socket.on("connect_profile", profile => {
+        socket.on("connect_profile", (profile) => {
             socket.profile = profile
-            m.innerHTML += (`connected ${profile.name}` + "<br/>")
+            msgBox.innerHTML += (`connected ${socket.profile.name}` + "<br/>")
         })
+
         socket.on("disconnect", () => {
-            m.innerHTML += (`connected ${socket.connected}` + "<br/>")
+            msgBox.innerHTML += (`connected ${socket.connected}` + "<br/>")
         })
         socket.on("post", data => {
-            m.innerHTML += ("post:" + JSON.stringify(data) + "<br/>")
+            msgBox.innerHTML += ("post:" + JSON.stringify(data) + "<br/>")
         })
         socket.on("post-like", data => {
-            m.innerHTML += ("post-like:" + JSON.stringify(data) + "<br/>")
+            msgBox.innerHTML += ("post-like:" + JSON.stringify(data) + "<br/>")
         })
         socket.on("comment", data => {
-            m.innerHTML += ("comment:" + JSON.stringify(data) + "<br/>")
+            msgBox.innerHTML += ("comment:" + JSON.stringify(data) + "<br/>")
         })
         socket.on("comment-like", data => {
-            m.innerHTML += ("comment-like:" + JSON.stringify(data) + "<br/>")
+            msgBox.innerHTML += ("comment-like:" + JSON.stringify(data) + "<br/>")
         })
         socket.on("connect_error", err => {
             alert(err)

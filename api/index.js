@@ -1,48 +1,50 @@
-const http = require('http');
-const socketio = require('socket.io');
-const jwt = require('jsonwebtoken');
-const { User: UserModal } = require('./model');
+const http = require('http')
+const socketio = require('socket.io')
+const jwt = require('jsonwebtoken')
+const { User: UserModel, User } = require('./model')
 
-const pubsub = require('./lib/pubsub');
-const app = require("./app.js");
+const pubsub = require('./lib/pubsub')
+const app = require('./app')
 
-const ACCES_TOKEN_SECRET = process.env.ACCES_TOKEN_SECRET || 'accestoken'
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'accestoken'
 
-const server = http.Server(app);
+const server = http.Server(app)
 const io = socketio(server, {
+    //Specifying CORS
     cors: {
         origin: '*'
     }
 })
 
-const liveData = io.of('/v1');
+const liveData = io.of('/v1')
 
-liveData.use((socket,  next)  => {
-    if(socket.handshake.auth && socket.handshake.auth.token){
-        jwt.verify(socket.handshake.auth.token, ACCES_TOKEN_SECRET, function (err, user){
-            if(err) return next(new Error('Authenticantion error'))
-            UserModal.findOne({
-                user
+liveData.use((socket, next) => {
+    if (socket.handshake.auth && socket.handshake.auth.token) {
+        jwt.verify(socket.handshake.auth.token, ACCESS_TOKEN_SECRET, function (err, user) {
+            if (err) return next(new Error('Authentication error'))
+            UserModel.findOne({
+                user: user.user
             }).populate('profile')
-            .then(u => {
-                if(u) {
-                    socket.profile = u.profile
-                    next()
-                } else {
-                    next(new Error('Authenticantion error'))
-                }
-            })
+                .then(u => {
+                    if (u) {
+                        socket.profile = u.profile
+                        next()
+                    } else {
+                        next(new Error('Authentication error'))
+                    }
+                })
         })
     } else {
-        next(new Error('Authenticantion error'))
+        next(new Error('Authentication error'))
     }
 })
 
+// Socket event
 liveData.on('connection', function (socket) {
-    console.warn(`a user connected live ${socket.profile.name}`)
+    console.warn(`A user connected live ${socket.profile.name}`)
 
     socket.on('disconnect', () => {
-        console.log(socket.connected)
+        console.log(socket.connected) // false
     })
     socket.on('error', (err) => {
         console.error(err)
@@ -61,7 +63,6 @@ pubsub.sub().then((sub) => {
     })
 }).catch(console.error)
 
-
-app.listen(process.env.PORT || 4000, () => {
+server.listen(process.env.PORT || 4000, () => {
     console.warn(`Server listen on http://localhost:${process.env.PORT || 4000}/api-docs`);
-}) 
+})

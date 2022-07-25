@@ -1,22 +1,28 @@
-const {Schema, model} = require('mongoose');
-
-
+const { Schema, model } = require('mongoose')
+/**
+ * @typedef Profile
+ * @property {string} _id
+ * @property {string} name.required
+ * @property {User} user.required - User
+ * @property {Array.<Profile>} - Following profiles
+ */
 const profileSchema = new Schema({
     name: {
-        type: String, 
-        required: true,
+        type: String,
+        required: [true, 'Please, insert at least 2 characters!'],
         minLength: 2
     },
     user: {
-        type: Schema.Types.ObjectId, 
-        ref: 'User', required: true
+        type: Schema.Types.ObjectId,
+        required: [true, 'You are not logged in'],
+        ref: 'User'
     },
-    followers: [{
-        type: Schema.Types.ObjectId, 
+    following: [{
+        type: Schema.Types.ObjectId,
         ref: 'Profile'
     }],
-    following: [{
-        type: Schema.Types.ObjectId, 
+    followers: [{
+        type: Schema.Types.ObjectId,
         ref: 'Profile'
     }],
     createdAt: {
@@ -27,7 +33,7 @@ const profileSchema = new Schema({
         type: Date,
         default: Date.now
     }
-});
+})
 
 profileSchema.index({ name: 'text' });
-module.exports = model('Profile', profileSchema);
+module.exports = model('Profile', profileSchema)

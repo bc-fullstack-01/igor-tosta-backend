@@ -17,6 +17,7 @@ const pubsub = require('./lib/pubsub')
 const options = Object.assign(defaultOptions, { basedir: __dirname })
 
 const app = express();
+
 const expressSwagger = esg(app);
 expressSwagger(options);
 
@@ -27,7 +28,7 @@ const urlencodedMiddleware = bodyParser.urlencoded({
     extended: true
 })
 
-app.use((req, res, next) => (/^multipart\//i.test(req.get('Content-Type')) ? next() : urlencodedMiddleware(req, res, next)));
+app.use((req, res, next) => (/^multipart\//i.test(req.get('Content-Type'))) ? next() : urlencodedMiddleware(req, res, next))
 app.use(bodyParser.json({
     defer: true
 }))
@@ -37,9 +38,9 @@ function authenticateToken(req, res, next) {
     const authHeader = req.headers.authorization
     const token = authHeader && authHeader.split(' ')[1]
     if (token == null) return next(createError(401))
-    jwt.verify(token, ACCES_TOKEN_SECRET, (err, user) => {
+    jwt.verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return next(createError(403))
-        UserModel.findOne({ user }).populate('profile')
+        UserModel.findOne(user).populate('profile')
             .then(u => {
                 req.user = u
                 next()
@@ -58,10 +59,15 @@ app.use('/v1/profiles', authenticateToken, Profile)
 app.use('/v1/feed', authenticateToken, Feed)
 app.use('/v1/security', Security)
 
-app.get('/v1/seed', (req, res, next) => require('./seed')
-    .then(() => res.status(200).end())
-    .catch(next)
-)
+app.get('/v1/seed', (req, res, next) => {
+    try {
+        require('./seed')
+        res.status(200).end()
+    } catch (error) {
+        console.error('entrei no erro')
+        next(error)
+    }
+})
 
 app.use('/favicon.ico', (req, res) => {
     res.end()

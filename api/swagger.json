@@ -879,6 +879,6 @@
     },
     "files": [
         "./routers/**/*.js",
-        "./models/**/*.js"
+        "./model/**/*.js"
     ]
 }
