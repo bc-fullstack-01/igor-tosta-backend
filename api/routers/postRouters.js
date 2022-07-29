@@ -54,7 +54,7 @@ router
      * @security JWT
      */
     .get((req, res, next) => Promise.resolve()
-        .then(() => Post.findById(req.params.id).populate({ path: 'comments' }))
+        .then(() => Post.findById(req.params.id).populate('profile').populate({ path: 'comments', populate:{path: 'profile'}}))
         .then((data) => data ? res.status(200).json(data) : next(createError(404)))
         .catch(err => next(err))
     )
