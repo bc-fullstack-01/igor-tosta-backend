@@ -8,7 +8,7 @@ const cors = require('cors')
 const esg = require('express-swagger-generator')
 const jwt = require('jsonwebtoken')
 
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'accestoken'
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'accesstoken'
 
 const defaultOptions = require('./swagger.json')
 const { Post, Comment, User, Security, Profile, Feed } = require('./routers')

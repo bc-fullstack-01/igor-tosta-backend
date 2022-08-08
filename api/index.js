@@ -6,7 +6,7 @@ const { User: UserModel, User } = require('./model')
 const pubsub = require('./lib/pubsub')
 const app = require('./app')
 
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'accestoken'
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'accesstoken'
 
 const server = http.Server(app)
 const io = socketio(server, {

@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const router = express.Router()
 const { User, Profile, Connection } = require('../model')
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'accestoken'
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'accesstoken'
 
 router
     .all((req, res, next) => Promise.resolve()

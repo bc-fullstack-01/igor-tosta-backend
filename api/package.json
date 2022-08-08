@@ -11,7 +11,7 @@
     "mongo:rm": "docker rm -f mongodb",
     "mongo:seed": "node seed.js",
     "mongo:rs": "npm run mongo:rm && npm run mongo:start && npm run mongo:seed",
-    "start": "nodemon index.js"
+    "start": "nodemon -V --exitcrash ."
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.131.0",
